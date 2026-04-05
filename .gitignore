@@ -1,0 +1,14 @@
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+
+# Large data files — generate locally with dataset.py
+neural_network/fingerprints_X.npy
+neural_network/labels_y.npy
+neural_network/raw_activities.csv
+neural_network/*.tmp
+
+# Keep the trained model
+!neural_network/best_model.pt
