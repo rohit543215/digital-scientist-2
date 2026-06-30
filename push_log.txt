@@ -1,1 +1,66 @@
 === START ===
+CMD: git add -A
+STDOUT: 
+STDERR: warning: in the working copy of 'do_push.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'run_git.bat', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'setup_git.py', LF will be replaced by CRLF the next time Git touches it
+
+RC: 0
+
+CMD: git restore --staged run_git.bat
+STDOUT: 
+STDERR: 
+RC: 0
+
+CMD: git restore --staged setup_git.py
+STDOUT: 
+STDERR: 
+RC: 0
+
+CMD: git restore --staged do_push.py
+STDOUT: 
+STDERR: 
+RC: 0
+
+CMD: git status
+STDOUT: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   push_log.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	do_push.py
+	run_git.bat
+	setup_git.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+STDERR: 
+RC: 0
+
+CMD: git commit -m "add full project: app, src pipeline, neural network, Dockerfile, Q&A"
+STDOUT: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   push_log.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	do_push.py
+	run_git.bat
+	setup_git.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+STDERR: 
+RC: 1
+
+=== ERROR: Command failed: git commit -m "add full project: app, src pipeline, neural network, Dockerfile, Q&A"
+ ===
