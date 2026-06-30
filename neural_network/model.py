@@ -10,9 +10,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
-import matplotlib.pyplot as plt
 
 # ── Config ────────────────────────────────────────────────────────────────────
 FINGERPRINT_BITS = 2048
@@ -98,6 +95,8 @@ def train(model, loader, optimizer, criterion):
 
 
 def evaluate(model, loader):
+    from sklearn.metrics import accuracy_score, roc_auc_score
+
     model.eval()
     all_preds, all_probs, all_labels = [], [], []
     with torch.no_grad():
@@ -115,6 +114,8 @@ def evaluate(model, loader):
 
 
 def plot_history(train_losses, val_accs, val_aucs):
+    import matplotlib.pyplot as plt
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 
     ax1.plot(train_losses, label="Train Loss")
@@ -136,6 +137,9 @@ def plot_history(train_losses, val_accs, val_aucs):
 
 
 def main():
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import classification_report
+
     print(f"Device: {DEVICE}")
 
     # ── Load data ──────────────────────────────────────────────

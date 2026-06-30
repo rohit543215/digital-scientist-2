@@ -1,7 +1,6 @@
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 
-
 def check_lipinski(smiles):
     """
     Lipinski's Rule of Five:

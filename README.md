@@ -44,10 +44,20 @@ Create a `.env` file in the project root:
 ```
 API_KEY=your-openrouter-api-key
 LLM_MODEL=google/gemini-flash-1.5
+
+# Optional: only used for disease-name fallback if local matching fails
+GROK_API_KEY=your-xai-api-key
+GROK_MODEL=grok-3-mini
 ```
 Get a free API key at [openrouter.ai](https://openrouter.ai)
 
 ### 3. Run
+Web UI:
+```bash
+streamlit run app.py
+```
+
+CLI:
 ```bash
 python main.py
 ```
@@ -55,6 +65,20 @@ Enter a disease when prompted:
 ```
 Enter disease name: lung cancer
 ```
+
+## Run With Docker
+
+Build the image:
+```bash
+docker build -t digital-scientist:latest .
+```
+
+Run the Streamlit app:
+```bash
+docker run --rm -p 8501:8501 --env-file .env digital-scientist:latest
+```
+
+Open: http://localhost:8501
 
 ## Example Output
 
@@ -83,12 +107,21 @@ Enter disease name: lung cancer
 ## Project Structure
 
 ```
-├── main.py               # Entry point — orchestrates all steps
-├── open_targets.py       # Step 1: disease → targets via Open Targets GraphQL API
-├── chembl.py             # Step 2: targets → compounds via ChEMBL REST API
-├── drug_likeness.py      # Step 3: Lipinski Ro5 filter using RDKit
+├── app.py                # Streamlit UI entry point
+├── main.py               # CLI entry point
 ├── requirements.txt      # Python dependencies
 ├── .env                  # API keys (not committed)
+├── src/
+│   └── digital_scientist/
+│       ├── pipeline.py               # Orchestrates the full workflow
+│       ├── agents/
+│       │   ├── biology_agent.py      # Biology summary agent
+│       │   └── chemistry_agent.py    # Chemistry summary agent
+│       ├── data_sources/
+│       │   ├── open_targets.py       # Disease → targets
+│       │   └── chembl.py             # Targets → compounds
+│       └── filters/
+│           └── drug_likeness.py      # Lipinski Ro5 filter
 │
 └── neural_network/
     ├── dataset.py        # Downloads ChEMBL SQLite, builds Morgan fingerprints

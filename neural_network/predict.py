@@ -10,7 +10,7 @@ import torch
 from rdkit import Chem, RDLogger
 from rdkit.Chem.rdFingerprintGenerator import GetMorganGenerator
 
-from model import BioactivityNet
+from .model import BioactivityNet
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -31,6 +31,44 @@ def get_model():
         _model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
         _model.eval()
     return _model
+
+
+def model_healthcheck(test_smiles="CCO"):
+    """
+    Validate model readiness using a lightweight single-SMILES inference.
+    Returns a dict with status and diagnostics.
+    """
+    info = {
+        "ok": False,
+        "model_path": MODEL_PATH,
+        "device": DEVICE,
+        "test_smiles": test_smiles,
+        "score": None,
+        "message": "",
+    }
+
+    if not os.path.exists(MODEL_PATH):
+        info["message"] = "best_model.pt not found"
+        return info
+
+    try:
+        fp = smiles_to_fp(test_smiles)
+        if fp is None:
+            info["message"] = "Invalid test SMILES"
+            return info
+
+        model = get_model()
+        X = torch.tensor(np.array([fp]), dtype=torch.float32).to(DEVICE)
+        with torch.no_grad():
+            score = float(model(X).cpu().numpy()[0])
+
+        info["ok"] = True
+        info["score"] = round(score, 4)
+        info["message"] = "Model loaded and inference succeeded"
+        return info
+    except Exception as exc:
+        info["message"] = f"Model healthcheck failed: {exc}"
+        return info
 
 
 def smiles_to_fp(smiles):
